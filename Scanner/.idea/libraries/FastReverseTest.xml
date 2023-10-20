@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="FastReverseTest">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/FastReverseTest.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

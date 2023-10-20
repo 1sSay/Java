@@ -1,0 +1,1 @@
+javac Scanner.java && javac Reverse.java && java Reverse
