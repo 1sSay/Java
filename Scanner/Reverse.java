@@ -3,39 +3,32 @@ import java.util.Arrays;
 
 public class Reverse {
     public static void main(String args[]) {
-        try {
-            Scanner lineScanner = new Scanner(System.in);
-            String line;
-    
-            char character;
-            int numberLength;
-    
-            int numbers[] = new int[16];
-            int numberCountInLine[] = new int[16];
-            int newNumbers[];
 
+        
+
+        try {
+            Scanner scanner = new Scanner(System.in);
+
+            int[] numbers = new int[16];
+            int[] numberLines = new int[16];
             int numberIdx = 0;
             int lineIdx = 0;
-            
-            System.out.println(lineScanner.hasNextLine());
-            
-            while (lineScanner.hasNextLine()) {
-                line = lineScanner.nextLine();
-                System.out.println(line);
-            }
-            lineScanner.close();
 
-            numberIdx = 0;
-            for (int i = 0; i < lineIdx; i++) {
-                for (int j = 0; j < numberCountInLine[i]; j++) {
-                    System.out.print(numbers[numberIdx]);
-                    numberIdx++;
-                    System.out.print(" ");
+            while (scanner.hasNextInt()) {
+                if (numberIdx == numbers.length) {
+                    numbers = Arrays.copyOf(numbers, numbers.length * 2);
                 }
-                System.out.println();
+                numbers[numberIdx] = scanner.nextInt();
+
+                if (lineIdx == numberLines.length) {
+                    numberLines = Arrays.copyOf(numberLines, numberLines.length * 2);
+                }
+
+                numberIdx++;
             }
+
         } catch (IOException e) {
-            System.err.println(e);
+            System.err.println("Cannot read: " + e);
         }
     }
 }

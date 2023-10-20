@@ -28,13 +28,43 @@ class Scanner {
         this.buffer = new char[8192];
         this.charsInBuffer = 0;
         this.charsRead = 0;
+        this.canRead = false;
+    }
+
+    private void checkBuffer() throws IOException {
+        if (charsRead == charsInBuffer) {
+            charsRead = 0;
+            charsInBuffer = reader.read(buffer);
+        }
+    }
+
+    private void readToken() throws IOException {
+        token = new StringBuilder();
+        canRead = false;
+
+        checkBuffer();
+        while (charsRead < charsInBuffer) {
+            lastSymbol = buffer[charsRead];
+
+            if (Character.isWhitespace(lastSymbol)) {
+                if (canRead) {
+                    break;
+                }
+            } else if (!canRead) {
+                tokenStart = charsRead;
+                canRead = true;
+            }
+
+            token.append(lastSymbol);
+            charsRead++;
+            checkBuffer();
+        }
     }
 
     public boolean hasNext() throws IOException {
         if (!canRead) {
-            parseNextWord();
+            readToken();
         }
-
         return canRead;
     }
 
@@ -45,98 +75,59 @@ class Scanner {
 
         try {
             Integer.parseUnsignedInt(token.substring(tokenStart));
-            return true;
         } catch (NumberFormatException e) {
             return false;
         }
-    }
-
-    public boolean hasNextLine() throws IOException {
-        if (!hasNext()) {
-            return false;
-        }
-
         return true;
     }
 
-    public String next() throws NoSuchElementException, IOException {
+    public boolean hasNextLine() throws IOException {
+        hasNext();
+        return token.length() > 0;
+    }
+
+    public String next() throws IOException, NoSuchElementException {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
 
-        String result = nextWord;
-        return result;
+        canRead = false;
+        return token.substring(tokenStart);
     }
 
-    public int nextInt() throws NoSuchElementException, IOException {
+    public int nextInt() throws IOException, NoSuchElementException {
         if (!hasNextInt()) {
             throw new NoSuchElementException();
         }
 
-        int number = Integer.parseInt(nextWord);
-        return number;
+        canRead = false;
+        return Integer.parseUnsignedInt(token.substring(tokenStart));
     }
 
-    public String nextLine() throws NoSuchElementException, IOException {
+    public String nextLine() throws IOException, NoSuchElementException {
         if (!hasNextLine()) {
             throw new NoSuchElementException();
         }
 
-        line = new StringBuilder(nextWord);
-        nextWord = new String();
-
+        checkBuffer();
         while (charsRead < charsInBuffer) {
             lastSymbol = buffer[charsRead];
-            line.append(lastSymbol);
+
+            token.append(lastSymbol);
 
             if (checkEndOfLine()) {
-                break;
+                return token.toString();
             }
 
             charsRead++;
-            if (charsRead == charsInBuffer) {
-                int charsInBuffer = reader.read(buffer);
-                charsRead = 0;
-            }
+            checkBuffer();
         }
 
-        canParse = false;
-        return line.toString();
+        canRead = false;
+        return token.toString();
     }
 
-    public void close() throws IOException {
-        reader.close();
-    }
-
-    private void parseNextWord() throws IOException {
-        StringBuilder builder = new StringBuilder();
-
-        if (charsRead == charsInBuffer) {
-            charsInBuffer = reader.read(buffer);
-            charsRead = 0;
-        }
-
-        while (charsRead < charsInBuffer) {
-            lastSymbol = buffer[charsRead];
-            if (builder.length() > 0 && Character.isWhitespace(lastSymbol)) {
-                break;
-            }
-
-            builder.append(lastSymbol);
-            charsRead++;
-
-            if (charsRead == charsInBuffer) {
-                int charsInBuffer = reader.read(buffer);
-                charsRead = 0;
-            }
-        }
-
-        if (builder.length() > 0) {
-            canParse = true;
-            nextWord = builder.toString();
-        } else {
-            canParse = false;
-        }
-
+    private boolean checkEndOfLine() {
+        return lastSymbol == '\n';
     }
 }
