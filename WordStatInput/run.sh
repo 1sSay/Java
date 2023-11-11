@@ -1,1 +1,1 @@
-javac WordStatCountMiddleL && java -ea -jar WordStatTest.jar CountMiddleL
+javac WordStatCountMiddleL.java && java -ea -jar WordStatTest.jar CountMiddleL

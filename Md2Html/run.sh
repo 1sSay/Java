@@ -1,0 +1,1 @@
+javac Md2Html.java && java Md2Html input.txt output.txt

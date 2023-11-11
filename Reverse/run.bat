@@ -1,1 +1,0 @@
-javac ReverseSumHex.java && java -ea -jar ReverseTest.jar SumHex

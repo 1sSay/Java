@@ -1,63 +1,56 @@
+import java.io.IOException;
+import java.util.Arrays;
+
 public class Reverse {
     public static void main(String args[]) {
-        Scanner lineScanner = new Scanner(System.in);
-        String line;
+        Scanner scanner;
+        try {
+            scanner = new Scanner(System.in);
 
-        char character;
-        int numberLength;
+            int[] numbers = new int[16];
+            int[] numberLines = new int[16];
+            int numberIdx = 0;
+            int lineIdx = 0;
 
-        int numbers[] = new int[16];
-        int numberCountInLine[] = new int[16];
-        int newNumbers[];
-
-        int numberIdx = 0;
-        int lineIdx = 0;
-
-        while (lineScanner.hasNextLine()) {
-            numberCount = 0;
-            line = lineScanner.nextLine();
-
-            numberLength = 0;
-            for (int i = 0; i < line.length(); i++) {
-                character = line.charAt(i);
-
-                if (Character.isDigit(character) | character == '-' | character == '+') {
-                    numberLength++;
-                }
-
-                if (Character.isWhitespace(character) & numberLength > 0) {
-                    numbers[numberIdx] = Integer.parseInt(line.substring(i - numberLength, i));
-                    numberLength = 0;
-                    
-                    numberCountInLine[lineIdx]++;
-                    numberIdx++;
-                }
-                else if (i == line.length() - 1 && numberLength > 0) {
-                    numbers[numberIdx] = Integer.parseInt(line.substring(i + 1 - numberLength, i + 1));
-                    
-                    numberCountInLine[lineIdx]++;
-                    numberIdx++;
-                }
-
-                if (numberIdx == numbers.length) {
-                    numbers = new int[numbers.length * 2];
-                }
-            }
-
-            lineIdx++;
-            if (lineIdx == numberCountInLine) {
+            while (scanner.hasNextInt()) {
                 
-            }
-        }
-        lineScanner.close();
+                if (scanner.isFirst()) {
+                    lineIdx += scanner.newLinesCount();
+                }
 
-        while (!numberCountInLine.empty()) {
-            numberCount = numberCountInLine.pop();
-            for (int i = 0; i < numberCount; i++) {
-                System.out.print(numbers.pop());
-                System.out.print(" ");
+                while (lineIdx >= numberLines.length) {
+                    numberLines = Arrays.copyOf(numberLines, numberLines.length * 2);
+                }
+
+                numbers[numberIdx] = scanner.nextInt();
+                numberLines[lineIdx]++;
+
+                numberIdx++;
+                if (numberIdx == numbers.length) {
+                    numbers = Arrays.copyOf(numbers, numbers.length * 2);
+                }
             }
-            System.out.println();
+
+            if (scanner.newLinesCount() > 0) {
+                lineIdx += scanner.newLinesCount() - 1;
+                while (lineIdx >= numberLines.length) {
+                    numberLines = Arrays.copyOf(numberLines, numberLines.length * 2);
+                }
+            }
+            scanner.close();
+
+            int i = numberIdx - 1;
+            for (int j = lineIdx; j >= 0; j--) {
+                for (int k = 0; k < numberLines[j]; k++) {
+                    System.out.print(numbers[i]);
+                    System.out.print(' ');
+                    i--;
+                }
+                System.out.println();
+            }
+
+        } catch (IOException e) {
+            System.err.println("Cannot read: " + e);
         }
     }
 }
