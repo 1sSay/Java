@@ -1,0 +1,1 @@
+javac Scanner.java && javac Reverse.java && javac ReverseSumHex.java && javac ReverseSumHexAbc.java && java -ea -jar FastReverseTest.jar SumHexAbc
