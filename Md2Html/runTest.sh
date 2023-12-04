@@ -1,0 +1,1 @@
+javac md2html/Md2Html.java && javac md2html/MarkdownToHtmlConverter.java && java -ea -jar Md2HtmlTest.jar Pre

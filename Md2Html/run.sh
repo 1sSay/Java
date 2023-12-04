@@ -1,1 +1,1 @@
-javac Md2Html.java && java Md2Html input.txt output.txt
+javac md2html/Md2Html.java && javac md2html/MarkdownToHtmlConverter.java && java md2html/Md2Html input.txt output.txt
